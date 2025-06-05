@@ -1,68 +1,57 @@
 import pytest
+from pathlib import Path
+import sys
+
+# Ensure project root is on the Python path when running tests directly
+ROOT_DIR = Path(__file__).resolve().parents[1]
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from core.graph_engine import GraphEngine
 from core.models import PlaceNode, PlaceEdge
 
-class TestGraphEngine:
-    """
-    Test suite for the GraphEngine class.
-    Tests the core functionality of the graph-based travel planning engine.
-    """
-    
-    @pytest.fixture
-    def graph_engine(self):
-        """
-        Fixture that provides a fresh GraphEngine instance for each test.
-        
-        Returns:
-            GraphEngine: A new instance of the graph engine
-        """
-        return GraphEngine()
-    
-    def test_add_node(self, graph_engine):
-        """
-        Test adding a new node to the graph.
-        
-        Args:
-            graph_engine (GraphEngine): The graph engine instance
-        """
-        node = PlaceNode(
-            name="Test Place",
-            lat=40.7128,
-            lon=-74.0060,
-            trust_score=0.8
-        )
+
+@pytest.fixture
+def graph_engine() -> GraphEngine:
+    """Return a fresh GraphEngine for each test."""
+    return GraphEngine()
+
+
+def test_add_node(graph_engine: GraphEngine) -> None:
+    node = PlaceNode(
+        id="1",
+        name="Test Place",
+        latitude=40.7128,
+        longitude=-74.0060,
+    )
+    graph_engine.add_node(node)
+    assert "1" in graph_engine._nodes
+    assert graph_engine._nodes["1"].name == "Test Place"
+
+
+def test_add_edge(graph_engine: GraphEngine) -> None:
+    node1 = PlaceNode(id="1", name="Place 1", latitude=0.0, longitude=0.0)
+    node2 = PlaceNode(id="2", name="Place 2", latitude=1.0, longitude=1.0)
+    graph_engine.add_node(node1)
+    graph_engine.add_node(node2)
+
+    edge = PlaceEdge(source_id="1", target_id="2", distance=2.5)
+    graph_engine.add_edge(edge)
+
+    assert edge in graph_engine._edges["1"]
+
+
+def test_shortest_path(graph_engine: GraphEngine) -> None:
+    a = PlaceNode(id="1", name="A", latitude=0.0, longitude=0.0)
+    b = PlaceNode(id="2", name="B", latitude=0.0, longitude=1.0)
+    c = PlaceNode(id="3", name="C", latitude=0.0, longitude=2.0)
+
+    for node in (a, b, c):
         graph_engine.add_node(node)
-        assert len(graph_engine.graph.nodes) == 1
-        
-    def test_add_edge(self, graph_engine):
-        """
-        Test adding an edge between two nodes.
-        
-        Args:
-            graph_engine (GraphEngine): The graph engine instance
-        """
-        node1 = PlaceNode(
-            name="Place 1",
-            lat=40.7128,
-            lon=-74.0060,
-            trust_score=0.8
-        )
-        node2 = PlaceNode(
-            name="Place 2",
-            lat=40.7589,
-            lon=-73.9851,
-            trust_score=0.7
-        )
-        
-        graph_engine.add_node(node1)
-        graph_engine.add_node(node2)
-        
-        edge = PlaceEdge(
-            source=node1,
-            target=node2,
-            distance=2.5,
-            travel_time=30
-        )
-        
-        graph_engine.add_edge(edge)
-        assert len(graph_engine.graph.edges) == 1 
+
+    graph_engine.add_edge(PlaceEdge(source_id="1", target_id="2", distance=1))
+    graph_engine.add_edge(PlaceEdge(source_id="2", target_id="3", distance=1))
+
+    result = graph_engine.shortest_path("1", "3")
+    assert result == (2, ["1", "2", "3"])
+
