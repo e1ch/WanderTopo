@@ -8,7 +8,7 @@
 
 ## 🔍 Why WanderTopo?
 
-Most travel apps force users into rigid, time-based schedules. TopoRoute flips that model.
+Most travel apps force users into rigid, time-based schedules. WanderTopo flips that model.
 
 - Instead of timelines, we use a **topological map** of restaurants, attractions, and experiences.
 - Each node (place) is evaluated by **trust**, **popularity**, and **context relevance** (e.g. time of day, mood, etc).
