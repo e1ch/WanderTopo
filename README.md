@@ -25,6 +25,14 @@ Most travel apps force users into rigid, time-based schedules. WanderTopo flips 
 
 ---
 
+## 🌐 Localization
+
+WanderTopo is built with internationalization in mind. The Flutter app uses the
+`l10n` configuration to provide translations for multiple languages. This allows
+travelers around the world to plan trips in their preferred language.
+
+---
+
 ## ⚖️ License
 
 This project is licensed under the **Business Source License 1.1 (BSL)**.
@@ -48,6 +56,6 @@ See the [LICENSE](./LICENSE) file for full details.
 
 ## 🙋 Author
 
-Created by t1ch, product designer & travel systems engineer.  
+Created by e1ch, product designer & travel systems engineer.
 Feel free to reach out via GitHub issues for discussion, collaboration, or potential strategic partnerships.
 

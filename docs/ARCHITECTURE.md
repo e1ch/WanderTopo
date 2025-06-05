@@ -61,4 +61,4 @@ WanderTopo is built on a three-tier architecture:
 - Real-time updates
 - Offline support
 - Caching layer
-- Analytics integration 
+- Analytics integration
